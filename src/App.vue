@@ -1,5 +1,10 @@
 <template>
-  <div>黑马</div>
+  <div>
+    <span class="toutiao toutiao-shoucang"> </span>
+    <van-button disabled type="primary">禁用状态</van-button>
+    <van-button disabled type="info">禁用状态</van-button>
+    <div class="box">rem,demo</div>
+  </div>
 </template>
 
 <script>
@@ -7,4 +12,10 @@
 export default {}
 </script>
 
-<style></style>
+<style>
+.box {
+  width: 694px;
+  height: 88px;
+  background-color: beige;
+}
+</style>
