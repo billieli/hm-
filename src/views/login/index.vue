@@ -5,19 +5,12 @@
         <van-nav-bar title="登录" class="nav-bar" />
 
         <!-- 表单组件 -->
-        <van-form @submit="onSubmit" class="form">
+        <van-form @submit="onSubmit" class="form" ref="from">
             <van-field
                 v-model="mobile"
                 name="mobile"
                 placeholder="请输入手机号"
-                :rules="[
-                    { required: true, message: '请输入手机号' },
-                    {
-                        pattern:
-                            /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/,
-                        message: '手机号格式不正确'
-                    }
-                ]"
+                :rules="mobileRule"
             >
                 <template #label>
                     <span class="toutiao toutiao-shouji"></span>
@@ -27,16 +20,28 @@
                 v-model="code"
                 name="code"
                 placeholder="请输入验证码"
-                :rules="[
-                    { required: true, message: '请输入验证码' },
-                    {
-                        pattern: /[0-9]{6}/,
-                        message: '验证码格式不正确'
-                    }
-                ]"
+                :rules="codeRule"
             >
                 <template #label>
                     <span class="toutiao toutiao-yanzhengma"></span>
+                </template>
+                <template #button>
+                    <van-button
+                        type="default"
+                        size="small"
+                        round
+                        native-type="button"
+                        class="btn"
+                        v-if="isShowBtn"
+                        @click="sendCode"
+                        >获取验证码</van-button
+                    >
+                    <van-count-down
+                        :time="6 * 10000"
+                        v-else
+                        format="ss秒"
+                        @finish="isShowBtn = true"
+                    />
                 </template>
             </van-field>
             <div style="margin: 16px">
@@ -49,13 +54,59 @@
 </template>
 
 <script>
+import { mobileRule, codeRule } from './rule'
+import { login, sendCodeApi } from '@/api'
+import { mapMutations } from 'vuex'
 export default {
     data() {
-        return { mobile: '', code: '' }
+        return { mobile: '', code: '', mobileRule, codeRule, isShowBtn: true }
     },
     methods: {
-        onSubmit(values) {
-            console.log('submit', values)
+        ...mapMutations(['SET_TOKEN']),
+        loading() {
+            this.$toast.loading({
+                message: '加载中...',
+                forbidClick: true,
+                duration: 0
+            })
+        },
+        async onSubmit() {
+            this.loading()
+            try {
+                const { data } = await login(this.mobile, this.code)
+                this.SET_TOKEN(data.data)
+                this.$toast.success('登录成功')
+            } catch (err) {
+                // console.log(err)
+                if (err.response && err.response.status === 400) {
+                    this.$toast.fail(err.response.data.message)
+                    console.log(err)
+                } else {
+                    this.$toast.clear()
+                    console.dir(err)
+                }
+            }
+        },
+        async sendCode() {
+            this.$refs.from.validate('mobile').then(() => {
+                console.log('发送 ')
+                this.isShowBtn = false
+            })
+            this.loading()
+            try {
+                await sendCodeApi(this.mobile)
+                this.$toast.success('验证码发送成功')
+            } catch (err) {
+                if (
+                    err.response &&
+                    (err.response.status === 429 || err.response.status === 404)
+                ) {
+                    this.$toast.fail(err.response.data)
+                } else {
+                    this.$toast.clear()
+                    throw err
+                }
+            }
         }
     }
 }
@@ -78,5 +129,10 @@ export default {
     .toutiao {
         font-size: 40px;
     }
+}
+.btn {
+    width: 2.65rem;
+    background-color: rgb(214, 214, 214);
+    color: rgb(115, 98, 98);
 }
 </style>
