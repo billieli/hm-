@@ -19,7 +19,9 @@ request.interceptors.request.use(
         }
         return confing
     },
-    function (error) {}
+    function (error) {
+        return Promise.reject(error)
+    }
 )
 
 export default request

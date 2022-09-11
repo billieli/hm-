@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 // 引入icon样式
-import '@/assets/font/iconfont.css'
+import '@/assets/fonts/iconfont.css'
 // 引入vant样式
 import Vant from 'vant'
 import 'vant/lib/index.css'
