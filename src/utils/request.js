@@ -7,7 +7,7 @@ const request = axios.create({
     baseURL: 'http://toutiao.itheima.net',
     timeout: 5000
 })
-//给 创建出来的request添加公用的请求头部
+// 给 创建出来的request添加公用的请求头部
 request.interceptors.request.use(
     function (confing) {
         const {
