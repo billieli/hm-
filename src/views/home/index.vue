@@ -11,30 +11,45 @@
         </van-nav-bar>
 
         <!-- 文章展示 -->
+
         <van-tabs v-model="active" swipeable>
             <van-tab v-for="item in channels" :key="item.id" :title="item.name">
-                <article-list :id="item.id"></article-list>
+                <article-list :id="item.id" class="article"></article-list>
             </van-tab>
 
-            <span class="toutiao toutiao-gengduo"> </span>
+            <span class="toutiao toutiao-gengduo" @click="isShow = true">
+            </span>
         </van-tabs>
+        <van-popup
+            v-model="isShow"
+            position="bottom"
+            closeable
+            close-icon-position="top-left"
+            :style="{ height: '100%' }"
+        >
+            <channel-edit
+                @change-active=";[(isShow = false), (active = $event)]"
+                :myChannels="channels"
+            ></channel-edit>
+        </van-popup>
     </div>
 </template>
 
 <script>
 import { getChannelAPI } from '@/api'
+import ChannelEdit from './components/ChannelEdit.vue'
 import ArticleList from './components/articleList.vue'
 export default {
     data() {
-        return { active: 0, channels: [] }
+        return { active: 0, channels: [], isShow: false }
     },
     methods: {
         async getChannel() {
             try {
                 const { data } = await getChannelAPI()
                 this.channels = data.data.channels
-                console.log(data)
-                console.log(this.channels)
+                // console.log(data)
+                // console.log(this.channels)
             } catch (err) {
                 // ？？=>相当于||
                 // ？.  ==>可选链操作符，？前是undifined,那就不会向后取值(err.response?.status)
@@ -51,7 +66,8 @@ export default {
         this.getChannel()
     },
     components: {
-        ArticleList
+        ArticleList,
+        ChannelEdit
     }
 }
 </script>
@@ -114,6 +130,24 @@ export default {
         height: 70%;
         width: 1px;
         background-image: url('~@/assets/images/gradient-gray-line.png');
+    }
+}
+.article {
+    // 如何给盒子拥有自己的滚动条
+    // - 1.定高 2.overflow:auto/scroll/overlay
+
+    height: calc(100vh - 46px - 40px - 50px);
+    overflow: auto;
+    // &: 代表当前元素他爹 // ::-webkit-scrollbar : 滚动槽
+    //::-webkit-scrollbar-thumb: 滚动的滑块
+
+    &::-webkit-scrollbar {
+        width: 10px;
+        background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #3296fa;
+        border-radius: 10px;
     }
 }
 </style>

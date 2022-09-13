@@ -19,7 +19,11 @@
             ></van-image>
         </van-cell>
         <!-- v-else-if="article.cover.type === 2" -->
-        <van-cell v-else :title="article.title" value="内容">
+        <van-cell
+            v-else-if="article.cover.type === 3"
+            :title="article.title"
+            value="内容"
+        >
             <template #lable>
                 <van-image
                     v-for="(item, index) in article.cover.images"
@@ -35,6 +39,7 @@
 </template>
 
 <script>
+import dayjs from '@/utils/dayjs'
 export default {
     props: {
         article: {
@@ -45,7 +50,7 @@ export default {
     computed: {
         label() {
             const { aut_name, comm_count, pubdate } = this.article
-            return `${aut_name}${comm_count}评论${pubdate}`
+            return `${aut_name}${comm_count}评论${dayjs().to(dayjs(pubdate))}`
         }
     }
 }

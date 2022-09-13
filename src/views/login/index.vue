@@ -77,6 +77,7 @@ export default {
                 this.SET_TOKEN(data.data)
                 this.$toast.success('登录成功')
                 this.$router.push('/profile')
+                // console.log(data)
             } catch (err) {
                 // console.log(err)
                 if (err.response && err.response.status === 400) {
@@ -90,7 +91,7 @@ export default {
         },
         async sendCode() {
             this.$refs.from.validate('mobile').then(() => {
-                console.log('发送 ')
+                // console.log('发送 ')
                 this.isShowBtn = false
             })
             this.loading()
