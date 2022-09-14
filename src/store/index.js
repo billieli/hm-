@@ -8,14 +8,15 @@ export default new Vuex.Store({
         createPersistedState({
             key: 'HM-TOUTIAO', // 储存的key
             // storage: window.sessionStorage, // 指定存储方式
-            reducer({ tokenObj }) {
+            reducer({ tokenObj, myChannelS }) {
                 // 默认接收state把{ tokenObj}解构出来
-                return { tokenObj }
+                return { tokenObj, myChannelS }
             }
         })
     ],
     state: {
-        tokenObj: {}
+        tokenObj: {},
+        myChannelS: []
     },
     getters: {
         isLogin(state) {
@@ -25,6 +26,9 @@ export default new Vuex.Store({
     mutations: {
         SET_TOKEN(state, token) {
             state.tokenObj = token
+        },
+        SET_MY_CHANNELS(state, channels) {
+            state.myChannels = channels
         }
     }
 })
