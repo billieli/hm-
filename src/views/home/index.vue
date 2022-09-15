@@ -4,7 +4,12 @@
         <!-- 搜索框 -->
         <van-nav-bar class="navbar">
             <template #title>
-                <van-button icon="search" size="small" round block
+                <van-button
+                    icon="search"
+                    size="small"
+                    round
+                    block
+                    @click="$router.push('/search')"
                     >搜索</van-button
                 >
             </template>
@@ -57,6 +62,7 @@ export default {
                 this.getChannel()
             } else {
                 const myChannels = this.$store.state.myChannels
+                console.log(myChannels)
                 if (myChannels.length === 0) {
                     this.getChannel()
                 } else {
@@ -70,7 +76,7 @@ export default {
                 const { data } = await getChannelAPI()
                 this.channels = data.data.channels
                 // console.log(data)
-                // console.log(this.channels)
+                console.log(this.channels.length)
             } catch (err) {
                 // ？？=>相当于||
                 // ？.  ==>可选链操作符，？前是undifined,那就不会向后取值(err.response?.status)

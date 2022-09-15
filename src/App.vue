@@ -1,6 +1,9 @@
 <template>
     <div>
-        <router-view></router-view>
+        <transition name="van-slide-left" mode="out-in">
+            <router-view></router-view>
+        </transition>
+
         <!-- <span class="toutiao toutiao-shoucang"> </span> -->
         <!-- <van-button disabled type="primary">禁用状态</van-button>
         <van-button disabled type="info">禁用状态</van-button>
